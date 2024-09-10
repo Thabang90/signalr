@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ChatService } from './services/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'chat-app';
+  user = '';
+  message = '';
+  messages$ = this.chatService.messages$;
+
+  constructor(private chatService: ChatService) {}
+
+  sendMessage() {
+    if (this.user && this.message) {
+      this.chatService.sendMessage(this.user, this.message);
+      this.message = '';
+    }
+  }
 }
