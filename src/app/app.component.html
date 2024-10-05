@@ -7,6 +7,7 @@
   </div>
   <div class="input-container">
     <input [(ngModel)]="user" placeholder="Your name" />
+    <input [(ngModel)]="recipientUser" placeholder="Recipient User ID" />
     <input [(ngModel)]="message" placeholder="Type a message" (keyup.enter)="sendMessage()" />
     <button (click)="sendMessage()">Send</button>
   </div>

@@ -12,7 +12,7 @@ export class ChatService {
 
   constructor() {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl('https://localhost:5001/chatHub')
+      .withUrl('http://localhost:5000/chatHub')
       .build();
 
     this.hubConnection.on('ReceiveMessage', (user: string, message: string) => {
@@ -23,7 +23,8 @@ export class ChatService {
     this.hubConnection.start().catch(err => console.error(err));
   }
 
-  sendMessage(user: string, message: string) {
-    this.hubConnection.invoke('SendMessage', user, message);
+  sendMessage(receiverUserId: string, user: string, message: string) {
+    this.hubConnection.invoke('SendMessageToUser', receiverUserId, message)
+      .catch(err => console.error(err));
   }
 }
