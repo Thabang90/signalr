@@ -14,17 +14,27 @@ export class ChatService {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl('http://localhost:5000/chatHub')
       .build();
-
-    this.hubConnection.on('ReceiveMessage', (user: string, message: string) => {
-      const currentMessages = this.messagesSubject.value;
-      this.messagesSubject.next([...currentMessages, { user, message }]);
-    });
-
-    this.hubConnection.start().catch(err => console.error(err));
   }
 
-  sendMessage(receiverUserId: string, user: string, message: string) {
-    this.hubConnection.invoke('SendMessageToUser', receiverUserId, message)
-      .catch(err => console.error(err));
+  startConnection() {
+    this.hubConnection
+      .start()
+      .then(() => console.log('Connection started'))
+      .catch((err) => console.log('Error while starting connection: ' + err));
   }
+
+  joinChat(groupName: string) {
+    this.hubConnection.invoke('JoinChat', groupName)
+      .catch((err) => console.error(err));
+  }
+
+  sendMessage(groupName: string, user: string, message: string) {
+    this.hubConnection.invoke('SendMessage', groupName, user, message)
+      .catch((err) => console.error(err));
+  }
+
+  addReceiveMessageListener(callback: (user: string, message: string) => void) {
+    this.hubConnection.on('ReceiveMessage', callback);
+  }
+
 }
